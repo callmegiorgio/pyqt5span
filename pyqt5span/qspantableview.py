@@ -20,10 +20,25 @@ class QSpanTableView(QtWidgets.QTableView):
         vheader.sectionPressed.connect(self.onVerticalHeaderSectionPressed)
 
     def setModel(self, model: QtCore.QAbstractItemModel) -> None:
+        old_model = self.model()
+
+        if old_model is not None:
+            old_model.modelReset.disconnect(self.onModelReset)
+            old_model.columnsInserted.disconnect(self.onModelColumnsChanged)
+            old_model.columnsRemoved.disconnect(self.onModelColumnsChanged)
+            old_model.rowsInserted.disconnect(self.onModelRowsChanged)
+            old_model.rowsRemoved.disconnect(self.onModelRowsChanged)
+
         super().setModel(model)
         
         self.spanHeaderView(QtCore.Qt.Orientation.Horizontal).setSectionCount(model.columnCount())
         self.spanHeaderView(QtCore.Qt.Orientation.Vertical).setSectionCount(model.rowCount())
+
+        model.modelReset.connect(self.onModelReset)
+        model.columnsInserted.connect(self.onModelColumnsChanged)
+        model.columnsRemoved.connect(self.onModelColumnsChanged)
+        model.rowsInserted.connect(self.onModelRowsChanged)
+        model.rowsRemoved.connect(self.onModelRowsChanged)
 
     def spanHeaderView(self, orientation: QtCore.Qt.Orientation) -> QSpanHeaderView:
         if orientation == QtCore.Qt.Orientation.Horizontal:
@@ -52,3 +67,21 @@ class QSpanTableView(QtWidgets.QTableView):
             self.selectRow(i)
             
         self.setSelectionMode(old_selection_mode)
+
+    @QtCore.pyqtSlot()
+    def onModelReset(self) -> None:
+        hheader = self.spanHeaderView(QtCore.Qt.Orientation.Horizontal)
+        vheader = self.spanHeaderView(QtCore.Qt.Orientation.Vertical)
+
+        hheader.setSectionCount(self.model().columnCount())
+        vheader.setSectionCount(self.model().rowCount())
+
+    @QtCore.pyqtSlot()
+    def onModelColumnsChanged(self) -> None:
+        hheader = self.spanHeaderView(QtCore.Qt.Orientation.Horizontal)
+        hheader.setSectionCount(self.model().columnCount())
+
+    @QtCore.pyqtSlot()
+    def onModelRowsChanged(self) -> None:
+        vheader = self.spanHeaderView(QtCore.Qt.Orientation.Vertical)
+        vheader.setSectionCount(self.model().rowCount())
