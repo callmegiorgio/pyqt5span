@@ -2,7 +2,7 @@
 
 `pyqt5span` is a library extending the PyQt5 framework to provide a way of spanning the
 horizontal and vertical headers of a `QTableView`. Below is a demonstration of this library
-with the script `examples.py` in the `samples` directory:
+with the script `example.py` in the `samples` directory:
 
 ![Example][example-gif]
 
