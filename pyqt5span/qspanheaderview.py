@@ -71,19 +71,23 @@ class QSpanHeaderView(QtWidgets.QHeaderView):
         
         if self.orientation() == QtCore.Qt.Orientation.Horizontal:
             cell_index = tbl_model.index(0, logical_idx)
-            cell_size: QtCore.QSize = cell_index.data(QtCore.Qt.ItemDataRole.SizeHintRole)
-            delta += cell_size.height()
-                
-            if pos.y() <= delta:
-                return cell_index
+
+            if cell_index.isValid():
+                cell_size: QtCore.QSize = cell_index.data(QtCore.Qt.ItemDataRole.SizeHintRole)
+                delta += cell_size.height()
+                    
+                if pos.y() <= delta:
+                    return cell_index
             
         else:
             cell_index = tbl_model.index(logical_idx, 0)
-            cell_size: QtCore.QSize = cell_index.data(QtCore.Qt.ItemDataRole.SizeHintRole)
-            delta += cell_size.width()
             
-            if pos.x() <= delta:
-                return cell_index
+            if cell_index.isValid():
+                cell_size: QtCore.QSize = cell_index.data(QtCore.Qt.ItemDataRole.SizeHintRole)
+                delta += cell_size.width()
+                
+                if pos.x() <= delta:
+                    return cell_index
 
         return QtCore.QModelIndex()
 
