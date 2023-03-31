@@ -29,10 +29,21 @@ class QSpanTableView(QtWidgets.QTableView):
             old_model.rowsInserted.disconnect(self.onModelRowsChanged)
             old_model.rowsRemoved.disconnect(self.onModelRowsChanged)
 
+        hheader = self.spanHeaderView(QtCore.Qt.Orientation.Horizontal)
+        vheader = self.spanHeaderView(QtCore.Qt.Orientation.Vertical)
+
+        hheader_model = hheader.model()
+        vheader_model = vheader.model()
+
+        # `QTableView` also sets the model of both horizontal and vertical headers to `model`.
+        # We don't want that, since `QSpanHeaderView` has its own model.
         super().setModel(model)
+
+        hheader.setModel(hheader_model)
+        vheader.setModel(vheader_model)
         
-        self.spanHeaderView(QtCore.Qt.Orientation.Horizontal).setSectionCount(model.columnCount())
-        self.spanHeaderView(QtCore.Qt.Orientation.Vertical).setSectionCount(model.rowCount())
+        hheader.setSectionCount(model.columnCount())
+        vheader.setSectionCount(model.rowCount())
 
         model.modelReset.connect(self.onModelReset)
         model.columnsInserted.connect(self.onModelColumnsChanged)

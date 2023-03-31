@@ -135,3 +135,31 @@ class QSpanHeaderModel(QtCore.QAbstractTableModel):
             return True
         
         return False
+    
+    def insertRows(self, row: int, count: int, parent: QtCore.QModelIndex = QtCore.QModelIndex()) -> bool:
+        self.beginInsertRows(parent, row, row + count - 1)
+        self._rows += count
+        self.endInsertRows()
+
+        return True
+    
+    def removeRows(self, row: int, count: int, parent: QtCore.QModelIndex = QtCore.QModelIndex()) -> bool:
+        self.beginRemoveRows(parent, row, row + count - 1)
+        self._rows -= count
+        self.endRemoveRows()
+
+        return True
+
+    def insertColumns(self, column: int, count: int, parent: QtCore.QModelIndex = QtCore.QModelIndex()) -> bool:
+        self.beginInsertColumns(parent, column, column + count - 1)
+        self._columns += count
+        self.endInsertColumns()
+
+        return True
+    
+    def removeColumns(self, column: int, count: int, parent: QtCore.QModelIndex = QtCore.QModelIndex()) -> bool:
+        self.beginRemoveColumns(parent, column, column + count - 1)
+        self._columns -= count
+        self.endRemoveColumns()
+
+        return True

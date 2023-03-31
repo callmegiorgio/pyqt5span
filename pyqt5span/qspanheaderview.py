@@ -12,10 +12,6 @@ class QSpanHeaderView(QtWidgets.QHeaderView):
     def __init__(self, orientation: QtCore.Qt.Orientation, sections: int = 0, parent: typing.Optional[QtWidgets.QWidget] = None) -> None:
         super().__init__(orientation, parent)
 
-        self.setSectionCount(sections)
-        self.sectionResized.connect(self.onSectionResized)
-
-    def setSectionCount(self, sections: int) -> None:
         base_section_size = QtCore.QSize()
 
         if self.orientation() == QtCore.Qt.Orientation.Horizontal:
@@ -30,11 +26,37 @@ class QSpanHeaderView(QtWidgets.QHeaderView):
             columns = 1
 
         model = QSpanHeaderModel(rows, columns)
+
         for row in range(rows):
             for col in range(columns):
                 model.setData(model.index(row, col), base_section_size, QtCore.Qt.ItemDataRole.SizeHintRole)
 
         self.setModel(model)
+        self.sectionResized.connect(self.onSectionResized)
+
+    def setSectionCount(self, sections: int) -> None:
+        model = self.model()
+
+        if self.orientation() == QtCore.Qt.Orientation.Horizontal:
+            current_sections = model.columnCount()
+
+            if sections < current_sections:
+                model.removeColumns(sections, current_sections - sections)
+            elif sections > current_sections:
+                model.insertColumns(current_sections, sections - current_sections)
+
+                for col in range(current_sections, sections):
+                    model.setData(model.index(0, col), QtCore.QSize(self.defaultSectionSize(), 20), QtCore.Qt.ItemDataRole.SizeHintRole)
+        else:
+            current_sections = model.rowCount()
+
+            if sections < current_sections:
+                model.removeRows(sections, current_sections - sections)
+            elif sections > current_sections:
+                model.insertRows(current_sections, sections - current_sections)
+
+                for row in range(current_sections, sections):
+                    model.setData(model.index(row, 0), QtCore.QSize(50, self.defaultSectionSize()), QtCore.Qt.ItemDataRole.SizeHintRole)
 
     def setSectionLabel(self, section: int, label: str) -> None:
         if self.orientation() == QtCore.Qt.Orientation.Horizontal:
