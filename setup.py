@@ -5,7 +5,7 @@ with open('README.md') as f:
 
 setup(
     name='pyqt5span',
-    version='0.1.0',
+    version='0.1.1',
     description='Span header for PyQt5',
     long_description=readme,
     long_description_content_type='text/markdown',
