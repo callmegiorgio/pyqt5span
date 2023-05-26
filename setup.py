@@ -5,13 +5,13 @@ with open('README.md') as f:
 
 setup(
     name='pyqt5span',
-    version='0.1.1',
+    version='0.1.2',
     description='Span header for PyQt5',
     long_description=readme,
     long_description_content_type='text/markdown',
-    author='Edwin Yllanes, Giovanni L',
-    author_email='callmegiorgio@hotmail.com',
-    url='https://github.com/callmegiorgio/pyqt5span',
+    author='Edwin Yllanes, Giovanni Lourenço',
+    author_email='gvnl.developer@outlook.com',
+    url='https://github.com/glourencoffee/pyqt5span',
     license='MIT',
     packages=['pyqt5span'],
     keywords=['pyqt5', 'spanning'],
